@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="20dp"
+    android:background="@color/colorPrimary"
+    android:layout_marginTop="200dp"
+    android:paddingTop="30dp"
+    tools:context=".Login">
+
+
+
+        <EditText
+            android:id="@+id/usernameLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="User Name" />
+
+
+        <EditText
+            android:id="@+id/PasswordLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Paassword"
+            android:inputType="textPassword" />
+<CheckBox
+    android:id="@+id/KeepLoginCheck"
+    android:text="Keep me logged in"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/LoginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="L O G I N"
+            android:background="@drawable/ic_launcher_foreground"/>
+        <Button
+            android:id="@+id/LoginButtonrEG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="R E G I S T E R ME"
+            android:background="@drawable/ic_launcher_foreground"/>
+
+    </LinearLayout>
+

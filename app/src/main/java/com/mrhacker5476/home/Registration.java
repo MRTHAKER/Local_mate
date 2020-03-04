@@ -23,7 +23,7 @@ Button register;
 RadioButton male,female;
 String gender;
 RegisterBean rb;
-Helper hp;
+Register_loginSource rls;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +38,7 @@ Helper hp;
         male=(RadioButton)findViewById(R.id.radioMale);
         female=(RadioButton)findViewById(R.id.radioFemale);
         this.rb=new RegisterBean();
+        rls=new Register_loginSource(rb,Registration.this);
         register.setOnClickListener(Registration.this);
         genderRadio.setOnCheckedChangeListener(Registration.this);
 
@@ -57,8 +58,8 @@ Helper hp;
             rb.setLastName(lastname.getText().toString());
             rb.setPassword(password.getText().toString());
             rb.setMobile(mobile.getText().toString());
-            hp=new Helper(getApplicationContext(),rb);
-            hp.Insert();
+            rls=new Register_loginSource(rb,Registration.this);
+            rls.insert();
             Intent intent = new Intent(Registration.this,Login.class);
             startActivity(intent);
             finish();

@@ -17,6 +17,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Co
 EditText username,password;
 CheckBox keeplogin;
 Button loginB,register;
+RegisterBean rb;
+Register_loginSource rls;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,19 +30,18 @@ Button loginB,register;
         register=(Button)findViewById(R.id.LoginButtonrEG);
         loginB.setOnClickListener(Login.this);
         register.setOnClickListener(Login.this);
+        rb=new RegisterBean();
+         rls=new Register_loginSource(rb,Login.this);
     }
 
     @Override
     public void onClick(View v) {
         if(loginB.getId()==v.getId())
          {
-            Helper h = new Helper(getApplicationContext());
-            /*if(h.CheckLog(username.getText().toString(),password.getText().toString())){
-                Toast.makeText(Login.this,"Ok",Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(Login.this,"NO",Toast.LENGTH_SHORT).show();
-            }*/
+             rb.setEmail(username.getText().toString());
+             rb.setPassword(password.getText().toString());
+             if(rls.CheckLogin(rb)){startActivity(new Intent(Login.this,Welcome.class));finish();}
+             else Toast.makeText(Login.this,"Username/Password is incorrect",Toast.LENGTH_SHORT).show();
         }
         if(v.getId()==register.getId())
         {

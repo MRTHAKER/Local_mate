@@ -7,18 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
+import java.lang.reflect.Array;
+
 public class Helper extends SQLiteOpenHelper {
     public static int version =1;
-    public static String table="ok";
-    public static String name="home";
-    RegisterBean rb;
-    public Helper(@Nullable Context context,RegisterBean rb) {
+    public String table;
+    public static String name="Local_mate";
+    public Helper(@Nullable Context context,String table) {
         super(context, name, null, version);
-        this.rb=rb;
-
-    }
-    public Helper(@Nullable Context context) {
-        super(context, name, null, version);
+        this.table=table;
     }
 
     @Override
@@ -26,7 +23,7 @@ public class Helper extends SQLiteOpenHelper {
         db.execSQL(
                 "CREATE TABLE "+table+"(" +
                 "Id" +
-                "INTEGER PRIMARY KEY AUTOINCREMENT" +
+                " INTEGER PRIMARY KEY AUTOINCREMENT" +
                 "," +
                 "FirstName" +
                 " TEXT NOT NULL" +
@@ -48,24 +45,15 @@ public class Helper extends SQLiteOpenHelper {
                 ")"
         );
     }
-    public void Insert(){
+    public void Insert(ContentValues cv){
         SQLiteDatabase db=this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("FirstName",rb.getFirstName());
-        cv.put("LastName",rb.getLastName());
-        cv.put("Email",rb.getEmail());
-        cv.put("Gender",rb.getGender());
-        cv.put("Mobile",rb.getMobile());
-        cv.put("Password",rb.getPassword());
         db.insert(table,null,cv);
     }
-    /*public Boolean CheckLog(String name,String pass){
-        SQLiteDatabase db=this.getWritableDatabase();
-        Cursor c=db.rawQuery("select FirstName,Password from "+table+" where FirstName='"+name+"'",null);
-        c.moveToNext();
-        if(c.getString(0)!=null) return Boolean.TRUE;
-        else return Boolean.FALSE;
-    }*/
+    public Cursor Where(String CompareField,String[] columns,String[] Columns_ToCompare){
+        SQLiteDatabase db =this.getReadableDatabase();
+        Cursor c=db.query(table,columns,CompareField,Columns_ToCompare,null,null,null);
+        return c;
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

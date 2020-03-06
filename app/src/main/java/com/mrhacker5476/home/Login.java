@@ -19,19 +19,28 @@ CheckBox keeplogin;
 Button loginB,register;
 RegisterBean rb;
 Register_loginSource rls;
+    SharedPreferences sf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username=(EditText)findViewById(R.id.usernameLogin);
-        password=(EditText)findViewById(R.id.PasswordLogin);
-        keeplogin=(CheckBox)findViewById(R.id.KeepLoginCheck);
-        loginB=(Button)findViewById(R.id.LoginButton);
-        register=(Button)findViewById(R.id.LoginButtonrEG);
-        loginB.setOnClickListener(Login.this);
-        register.setOnClickListener(Login.this);
-        rb=new RegisterBean();
-         rls=new Register_loginSource(rb,Login.this);
+        sf = getSharedPreferences("log",MODE_PRIVATE);
+        if(sf.getBoolean("log",Boolean.FALSE)){
+            startActivity(new Intent(Login.this,Welcome.class));
+            finish();
+        }
+        else {
+            username = (EditText) findViewById(R.id.usernameLogin);
+            password = (EditText) findViewById(R.id.PasswordLogin);
+            keeplogin = (CheckBox) findViewById(R.id.KeepLoginCheck);
+            loginB = (Button) findViewById(R.id.LoginButton);
+            register = (Button) findViewById(R.id.LoginButtonrEG);
+            loginB.setOnClickListener(Login.this);
+            register.setOnClickListener(Login.this);
+            keeplogin.setOnCheckedChangeListener(Login.this);
+            rb = new RegisterBean();
+            rls = new Register_loginSource(rb, Login.this);
+        }
     }
 
     @Override
@@ -40,6 +49,7 @@ Register_loginSource rls;
          {
              rb.setEmail(username.getText().toString());
              rb.setPassword(password.getText().toString());
+
              if(rls.CheckLogin(rb)){startActivity(new Intent(Login.this,Welcome.class));finish();}
              else Toast.makeText(Login.this,"Username/Password is incorrect",Toast.LENGTH_SHORT).show();
         }
@@ -53,6 +63,14 @@ Register_loginSource rls;
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+        if(buttonView==keeplogin){
+            SharedPreferences.Editor se=sf.edit();
+            if(keeplogin.isChecked()){
+                se.putBoolean("log",Boolean.TRUE).apply();
+            }
+            else{
+                se.putBoolean("log",Boolean.FALSE).apply();
+            }
+        }
     }
 }

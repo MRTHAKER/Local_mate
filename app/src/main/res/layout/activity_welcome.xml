@@ -6,10 +6,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Welcome">
-<Button
+<com.google.android.material.appbar.MaterialToolbar
+    android:id="@+id/mt"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:titleTextColor="@color/lime"
+    android:background="@color/navy" />
+    <Button
     android:id="@+id/logout"
     android:text="Log Out"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"/>
-
+    <Button
+        android:id="@+id/getlocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+<TextView
+    android:id="@+id/lock"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
 </LinearLayout>

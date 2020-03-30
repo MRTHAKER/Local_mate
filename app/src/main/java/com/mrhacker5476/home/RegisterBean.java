@@ -1,7 +1,17 @@
 package com.mrhacker5476.home;
 
+import androidx.annotation.NonNull;
+
 public class RegisterBean {
-    String FirstName,LastName,Email,Gender,Password,Mobile;
+    String FirstName;
+    String LastName;
+
+
+
+    String Email;
+    String Gender;
+    String Password;
+    String Mobile;
 
     public String getMobile() {
         return Mobile;
@@ -49,5 +59,10 @@ public class RegisterBean {
 
     public void setPassword(String password) {
         Password = password;
+    }
+
+    @Override
+    public String toString() {
+       return "FirstName="+FirstName+"&LastName="+LastName+"&Email="+Email+"&Gender="+Gender+"&Password="+Password+"&Mobile="+Mobile;
     }
 }

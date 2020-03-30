@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
-import java.lang.reflect.Array;
-
 public class Helper extends SQLiteOpenHelper {
     public static int version =1;
     public String table;

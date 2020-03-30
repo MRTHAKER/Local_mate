@@ -57,7 +57,6 @@ Register_loginSource rls;
         {
             Intent intent=new Intent(Login.this,Registration.class);
             startActivity(intent);
-            finish();
         }
     }
 

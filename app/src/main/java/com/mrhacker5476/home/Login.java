@@ -1,10 +1,11 @@
 package com.mrhacker5476.home;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.FragmentBreadCrumbs;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,11 +14,17 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class Login extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class Login extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,AsyncResponse {
 EditText username,password;
 CheckBox keeplogin;
 Button loginB,register;
-RegisterBean rb;
+LoginBean lb;
+String file="login";
 Register_loginSource rls;
     SharedPreferences sf;
     @Override
@@ -38,8 +45,7 @@ Register_loginSource rls;
             loginB.setOnClickListener(Login.this);
             register.setOnClickListener(Login.this);
             keeplogin.setOnCheckedChangeListener(Login.this);
-            rb = new RegisterBean();
-            rls = new Register_loginSource(rb, Login.this);
+            lb = new LoginBean();
         }
     }
 
@@ -47,11 +53,14 @@ Register_loginSource rls;
     public void onClick(View v) {
         if(loginB.getId()==v.getId())
          {
-             rb.setEmail(username.getText().toString());
-             rb.setPassword(password.getText().toString());
-
-             if(rls.CheckLogin(rb)){startActivity(new Intent(Login.this,Welcome.class));finish();}
-             else Toast.makeText(Login.this,"Username/Password is incorrect",Toast.LENGTH_SHORT).show();
+             if(isNetworkStatusAvialable(Login.this)) {
+                 lb.setEmail(username.getText().toString());
+                 lb.setPassword(password.getText().toString());
+                 new SqlCall(Login.this, file, lb, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+             }
+             else {
+                 Toast.makeText(Login.this,"Please enable Internet Connection",Toast.LENGTH_LONG).show();
+             }
         }
         if(v.getId()==register.getId())
         {
@@ -71,5 +80,29 @@ Register_loginSource rls;
                 se.putBoolean("log",Boolean.FALSE).apply();
             }
         }
+    }
+    public static boolean isNetworkStatusAvialable (Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null)
+        {
+            NetworkInfo netInfos = connectivityManager.getActiveNetworkInfo();
+            if(netInfos != null)
+            {
+                return netInfos.isConnected();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void processFinish(JSONObject jsonObject) throws JSONException {
+        if(jsonObject.get("done").equals(true)){
+            Toast.makeText(Login.this,"Login Success.",Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Login.this,Welcome.class);
+            intent.putExtra("mail",lb.Email);
+            startActivity(intent);
+            finish();
+        }
+        else Toast.makeText(Login.this,"Email/Password is wrong",Toast.LENGTH_SHORT).show();
     }
 }

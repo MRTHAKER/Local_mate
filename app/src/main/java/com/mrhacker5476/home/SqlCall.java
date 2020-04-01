@@ -5,8 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -65,24 +65,24 @@ public class SqlCall extends AsyncTask {
             res=a.toString();
             assert res!=null;
             jsonObject = new JSONObject(res);
-            if(jsonObject.has("done")) result =Boolean.TRUE;
-            else result=Boolean.FALSE;
-
-
         }
         catch(Exception e){
             Log.d("Exception Occurred",e.toString());}
         finally {
             urlConnection.disconnect();
         }
-        return res;
+        return jsonObject;
     }
 
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         progressDialog.dismiss();
-        delegate.processFinish(result);
+        try {
+            delegate.processFinish(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -2,6 +2,7 @@ package com.mrhacker5476.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -27,12 +29,15 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 @SuppressLint("NewApi")
-public class Welcome extends AppCompatActivity implements View.OnClickListener, LocationListener, ActivityCompat.OnRequestPermissionsResultCallback, DialogInterface.OnClickListener {
+public class Welcome extends AppCompatActivity implements View.OnClickListener, LocationListener, ActivityCompat.OnRequestPermissionsResultCallback, DialogInterface.OnClickListener,AsyncResponse {
     Button logout;
     SharedPreferences sf;
     SharedPreferences.Editor se;
@@ -42,6 +47,9 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     String mail;
     MaterialToolbar mt;
     AlertDialog ab;
+    ProgressDialog pd;
+    LocationBean lb;
+    String file="location";
 
     @SuppressLint("MissingPermission")
     @Override
@@ -51,11 +59,17 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
         logout = (Button) findViewById(R.id.logout);
         lock = (TextView) findViewById(R.id.lock);
         mt = findViewById(R.id.mt);
+        lb=new LocationBean();
         logout.setOnClickListener(Welcome.this);
+        sf = getSharedPreferences("log", MODE_PRIVATE);
         gc = new Geocoder(this, Locale.getDefault());
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Intent intent = getIntent();
-        mail = intent.getStringExtra("mail");
+        mail = sf.getString("mail",null);
+        pd=new ProgressDialog(this);
+        pd.setTitle("Processing, please wait.");
+        pd.setCancelable(false);
+        lb.setEmail(mail);
         makeCall();
 
 
@@ -65,12 +79,11 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     private void makeCall() {
         if (CheckPermission()) {
             if(lm.isLocationEnabled()) {
+                pd.show();
                     lm.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
-                    Toast.makeText(Welcome.this, "Getting your location this may take a while", Toast.LENGTH_LONG).show();
             } else{
                 Toast.makeText(this,"Enable GPS",Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
+
             }
 
         }
@@ -98,7 +111,6 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
         if (v == logout) {
-            sf = getSharedPreferences("log", MODE_PRIVATE);
             se = sf.edit();
             se.remove("log");
             se.putBoolean("log", Boolean.FALSE).apply();
@@ -119,7 +131,11 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     public void onLocationChanged(Location location) {
         try {
             List<Address> ad = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            mt.setTitle(ad.get(0).getAdminArea() + ", " + ad.get(0).getLocality() + ", " + ad.get(0).getSubLocality()+", "+ad.get(0).getPostalCode());
+            String loc=ad.get(0).getAdminArea() + ", " + ad.get(0).getLocality() + ", " + ad.get(0).getSubLocality()+", "+ad.get(0).getPostalCode();
+            mt.setTitle(loc);
+            lb.setLocation(loc);
+            new SqlCall(file,lb,this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -142,6 +158,15 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
         if(dialog==ab){
             finish();
         }
+    }
+
+    @Override
+    public void processFinish(JSONObject jsonObject) throws JSONException {
+        pd.dismiss();
+        if(jsonObject.get("done").equals(true)){
+            Toast.makeText(Welcome.this,"Success",Toast.LENGTH_SHORT).show();
+        }
+        else Toast.makeText(Welcome.this,"Error",Toast.LENGTH_SHORT).show();
     }
 }
 

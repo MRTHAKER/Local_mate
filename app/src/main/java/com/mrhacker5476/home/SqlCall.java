@@ -21,25 +21,16 @@ public class SqlCall extends AsyncTask {
     Boolean result;
     public AsyncResponse delegate;
     JSONObject jsonObject;
-    ProgressDialog progressDialog;
-    Context context;
     Object object;
-    String title="Processing, Please wait...";
     String file;
-    SqlCall(Context context,String file,Object object,AsyncResponse delegate){
-        this.context=context;
-        this.title=title;
+    SqlCall(String file,Object object,AsyncResponse delegate){
         this.file=file;
         this.object=object;
         this.delegate=delegate;
-        progressDialog=new ProgressDialog(this.context);
-        progressDialog.setTitle(this.title);
     }
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog.setCancelable(false);
-        progressDialog.show();
     }
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -77,7 +68,6 @@ public class SqlCall extends AsyncTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        progressDialog.dismiss();
         try {
             delegate.processFinish(jsonObject);
         } catch (JSONException e) {

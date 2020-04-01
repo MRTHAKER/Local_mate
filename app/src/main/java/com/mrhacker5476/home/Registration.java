@@ -66,7 +66,10 @@ String file="register";
                     rb.setLastName(lastname.getText().toString());
                     rb.setPassword(password.getText().toString());
                     rb.setMobile(mobile.getText().toString());
-                    new SqlCall(Registration.this, file, rb, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    progressDialog.setTitle("Processing, please wait...");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                    new SqlCall( file, rb, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     Toast.makeText(Registration.this,"Please Enable Internet Connection.",Toast.LENGTH_LONG).show();
                 }
@@ -92,6 +95,7 @@ String file="register";
 
     @Override
     public void processFinish(JSONObject jsonObject) throws JSONException {
+        progressDialog.dismiss();
         if(jsonObject.get("done").equals(true)){
             Toast.makeText(Registration.this,"Success.",Toast.LENGTH_LONG).show();
             Intent intent = new Intent(Registration.this,Login.class);

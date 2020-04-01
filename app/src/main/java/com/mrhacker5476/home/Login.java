@@ -1,5 +1,6 @@
 package com.mrhacker5476.home;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ LoginBean lb;
 String file="login";
 Register_loginSource rls;
     SharedPreferences sf;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +39,12 @@ Register_loginSource rls;
             finish();
         }
         else {
+            progressDialog=new ProgressDialog(this);
+            progressDialog.setTitle("Processing, please wait...");
+            progressDialog.setCancelable(false);
             username = (EditText) findViewById(R.id.usernameLogin);
             password = (EditText) findViewById(R.id.PasswordLogin);
-            keeplogin = (CheckBox) findViewById(R.id.KeepLoginCheck);
+            keeplogin = findViewById(R.id.KeepLoginCheck);
             loginB = (Button) findViewById(R.id.LoginButton);
             register = (Button) findViewById(R.id.LoginButtonrEG);
             loginB.setOnClickListener(Login.this);
@@ -56,7 +61,10 @@ Register_loginSource rls;
              if(isNetworkStatusAvialable(Login.this)) {
                  lb.setEmail(username.getText().toString());
                  lb.setPassword(password.getText().toString());
-                 new SqlCall(Login.this, file, lb, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                 SharedPreferences.Editor se=sf.edit();
+                 se.putString("mail",lb.Email).apply();
+                 progressDialog.show();
+                 new SqlCall(file, lb, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
              }
              else {
                  Toast.makeText(Login.this,"Please enable Internet Connection",Toast.LENGTH_LONG).show();
@@ -96,6 +104,7 @@ Register_loginSource rls;
 
     @Override
     public void processFinish(JSONObject jsonObject) throws JSONException {
+        progressDialog.dismiss();
         if(jsonObject.get("done").equals(true)){
             Toast.makeText(Login.this,"Login Success.",Toast.LENGTH_LONG).show();
             Intent intent = new Intent(Login.this,Welcome.class);

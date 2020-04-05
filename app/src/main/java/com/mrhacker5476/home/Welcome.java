@@ -16,18 +16,17 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.Settings;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,11 +36,10 @@ import java.util.List;
 import java.util.Locale;
 
 @SuppressLint("NewApi")
-public class Welcome extends AppCompatActivity implements View.OnClickListener, LocationListener, ActivityCompat.OnRequestPermissionsResultCallback, DialogInterface.OnClickListener,AsyncResponse {
-    Button logout;
+public class Welcome extends AppCompatActivity implements LocationListener, ActivityCompat.OnRequestPermissionsResultCallback, DialogInterface.OnClickListener, AsyncResponse, Toolbar.OnMenuItemClickListener, BottomNavigationView.OnNavigationItemSelectedListener {
+
     SharedPreferences sf;
     SharedPreferences.Editor se;
-    TextView lock;
     LocationManager lm;
     Geocoder gc;
     String mail;
@@ -50,21 +48,20 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     ProgressDialog pd;
     LocationBean lb;
     String file="location";
-
+    BottomNavigationView navigationMenu;
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        logout = (Button) findViewById(R.id.logout);
-        lock = (TextView) findViewById(R.id.lock);
         mt = findViewById(R.id.mt);
+        mt.setOnMenuItemClickListener(this);
         lb=new LocationBean();
-        logout.setOnClickListener(Welcome.this);
         sf = getSharedPreferences("log", MODE_PRIVATE);
+        navigationMenu=findViewById(R.id.BottomMenu);
+        navigationMenu.setOnNavigationItemSelectedListener(this);
         gc = new Geocoder(this, Locale.getDefault());
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Intent intent = getIntent();
         mail = sf.getString("mail",null);
         pd=new ProgressDialog(this);
         pd.setTitle("Processing, please wait.");
@@ -82,8 +79,9 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
                 pd.show();
                     lm.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
             } else{
-                Toast.makeText(this,"Enable GPS",Toast.LENGTH_LONG).show();
-
+                Toast.makeText(this,"Enable GPS in high accuracy mode.",Toast.LENGTH_LONG).show();
+                Intent viewIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(viewIntent);
             }
 
         }
@@ -108,16 +106,6 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
 
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v == logout) {
-            se = sf.edit();
-            se.remove("log");
-            se.putBoolean("log", Boolean.FALSE).apply();
-            startActivity(new Intent(Welcome.this, Login.class));
-            finish();
-        }
-    }
 
     public Boolean CheckPermission() {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -143,10 +131,12 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
     }
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+        makeCall();
     }
 
     @Override
     public void onProviderEnabled(String provider) {
+        makeCall();
     }
 
     @Override
@@ -167,6 +157,26 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener, 
             Toast.makeText(Welcome.this,"Success",Toast.LENGTH_SHORT).show();
         }
         else Toast.makeText(Welcome.this,"Error",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.LogoutMenu:
+                    se = sf.edit();
+                    se.remove("log");
+                    se.remove("mail");
+                    se.putBoolean("log", Boolean.FALSE).apply();
+                    startActivity(new Intent(Welcome.this, Login.class));
+                    finish();
+                    return true;
+            }
+        return false;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 }
 

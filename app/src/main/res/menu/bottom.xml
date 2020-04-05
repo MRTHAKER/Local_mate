@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_settings"
-        android:icon="@drawable/baseline_settings_black_36"
-        android:menuCategory="secondary"
-        android:title="Settings" />
-
-    <item
         android:id="@+id/menu_home"
         android:icon="@drawable/baseline_home_black_36"
         android:title="Home" />
 
+    <item
+        android:id="@+id/menu_recent"
+        android:icon="@drawable/baseline_explore_black_36"
+        android:title="Recent" />
+
 
     <item
-        android:id="@+id/menu_feeds"
-        android:icon="@drawable/baseline_explore_black_36"
-        android:title="Explore" />
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/baseline_settings_black_36"
+        android:title="Settings" />
 
 </menu>

@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,7 +48,11 @@ public class Welcome extends AppCompatActivity implements LocationListener, Acti
     AlertDialog ab;
     ProgressDialog pd;
     LocationBean lb;
+    FrameLayout frame;
     String file="location";
+    Main_dashboard dashboard;
+    Fragment_recent recent;
+    Fragment_Settings settings;
     BottomNavigationView navigationMenu;
     @SuppressLint("MissingPermission")
     @Override
@@ -63,6 +68,11 @@ public class Welcome extends AppCompatActivity implements LocationListener, Acti
         gc = new Geocoder(this, Locale.getDefault());
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mail = sf.getString("mail",null);
+        frame=findViewById(R.id.Mainframe);
+        dashboard=new Main_dashboard();
+        recent=new Fragment_recent();
+        settings=new Fragment_Settings();
+        getFragment();
         pd=new ProgressDialog(this);
         pd.setTitle("Processing, please wait.");
         pd.setCancelable(false);
@@ -70,6 +80,10 @@ public class Welcome extends AppCompatActivity implements LocationListener, Acti
         makeCall();
 
 
+    }
+
+    private void getFragment() {
+        getSupportFragmentManager().beginTransaction().add(R.id.Mainframe,dashboard).add(R.id.Mainframe,recent).add(R.id.Mainframe,settings).hide(recent).hide(settings).hide(dashboard).commit();
     }
 
     @SuppressLint("MissingPermission")
@@ -155,6 +169,7 @@ public class Welcome extends AppCompatActivity implements LocationListener, Acti
         pd.dismiss();
         if(jsonObject.get("done").equals(true)){
             Toast.makeText(Welcome.this,"Success",Toast.LENGTH_SHORT).show();
+            getSupportFragmentManager().beginTransaction().show(dashboard).hide(recent).hide(settings).commit();
         }
         else Toast.makeText(Welcome.this,"Error",Toast.LENGTH_SHORT).show();
     }
@@ -176,7 +191,19 @@ public class Welcome extends AppCompatActivity implements LocationListener, Acti
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        switch (item.getItemId()){
+            case R.id.menu_home:
+                getSupportFragmentManager().beginTransaction().show(dashboard).hide(recent).hide(settings).commit();
+                return true;
+            case R.id.menu_recent:
+                getSupportFragmentManager().beginTransaction().show(recent).hide(dashboard).hide(settings).commit();
+                return true;
+            case R.id.menu_settings:
+                getSupportFragmentManager().beginTransaction().show(settings).hide(dashboard).hide(recent).commit();
+                return true;
+            default:
+                return false;
+        }
     }
 }
 

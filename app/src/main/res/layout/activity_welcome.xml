@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Welcome">
-
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/mt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/navy"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_vertical"
         app:menu="@menu/main_menu"
         app:titleTextColor="@color/lime" />
+    <FrameLayout
+        android:layout_below="@id/mt"
+        android:id="@+id/Mainframe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="9"
+        android:paddingTop="2dp">
+
+    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/BottomMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        android:paddingTop="5dp"
+        android:background="@color/navy"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:layout_weight="1"
-        android:background="@color/navy"
-        android:paddingTop="5dp"
         app:itemTextColor="@color/cardview_light_background"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_scrollFlags="scroll|enterAlways|snap"
         app:menu="@menu/bottom" />
-    />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

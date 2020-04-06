@@ -27,6 +27,7 @@ Button loginB,register;
 LoginBean lb;
 String file="login";
 Register_loginSource rls;
+Boolean staylogg=false;
     SharedPreferences sf;
     ProgressDialog progressDialog;
     @Override
@@ -61,8 +62,6 @@ Register_loginSource rls;
              if(isNetworkStatusAvialable(Login.this)) {
                  lb.setEmail(username.getText().toString());
                  lb.setPassword(password.getText().toString());
-                 SharedPreferences.Editor se=sf.edit();
-                 se.putString("mail",lb.Email).apply();
                  progressDialog.show();
                  new SqlCall(file, lb, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
              }
@@ -82,10 +81,10 @@ Register_loginSource rls;
         if(buttonView==keeplogin){
             SharedPreferences.Editor se=sf.edit();
             if(keeplogin.isChecked()){
-                se.putBoolean("log",Boolean.TRUE).apply();
+                staylogg=true;
             }
             else{
-                se.putBoolean("log",Boolean.FALSE).apply();
+                staylogg=false;
             }
         }
     }
@@ -108,7 +107,9 @@ Register_loginSource rls;
         if(jsonObject.get("done").equals(true)){
             Toast.makeText(Login.this,"Login Success.",Toast.LENGTH_LONG).show();
             Intent intent = new Intent(Login.this,Welcome.class);
-            intent.putExtra("mail",lb.Email);
+            SharedPreferences.Editor se=sf.edit();
+            se.putBoolean("log",staylogg).apply();
+            se.putString("mail",lb.Email).apply();
             startActivity(intent);
             finish();
         }

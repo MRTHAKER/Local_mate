@@ -72,7 +72,6 @@ public class Welcome extends AppCompatActivity implements LocationListener, Acti
         dashboard=new Main_dashboard();
         recent=new Fragment_recent();
         settings=new Fragment_Settings();
-        getFragment();
         pd=new ProgressDialog(this);
         pd.setTitle("Processing, please wait.");
         pd.setCancelable(false);
@@ -83,7 +82,7 @@ public class Welcome extends AppCompatActivity implements LocationListener, Acti
     }
 
     private void getFragment() {
-        getSupportFragmentManager().beginTransaction().add(R.id.Mainframe,dashboard).add(R.id.Mainframe,recent).add(R.id.Mainframe,settings).hide(recent).hide(settings).hide(dashboard).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.Mainframe,dashboard).add(R.id.Mainframe,recent).add(R.id.Mainframe,settings).hide(recent).hide(settings).show(dashboard).commit();
     }
 
     @SuppressLint("MissingPermission")
@@ -136,6 +135,7 @@ public class Welcome extends AppCompatActivity implements LocationListener, Acti
             String loc=ad.get(0).getAdminArea() + ", " + ad.get(0).getLocality() + ", " + ad.get(0).getSubLocality()+", "+ad.get(0).getPostalCode();
             mt.setTitle(loc);
             lb.setLocation(loc);
+            dashboard.lb=this.lb;
             new SqlCall(file,lb,this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } catch (IOException e) {
@@ -168,8 +168,7 @@ public class Welcome extends AppCompatActivity implements LocationListener, Acti
     public void processFinish(JSONObject jsonObject) throws JSONException {
         pd.dismiss();
         if(jsonObject.get("done").equals(true)){
-            Toast.makeText(Welcome.this,"Success",Toast.LENGTH_SHORT).show();
-            getSupportFragmentManager().beginTransaction().show(dashboard).hide(recent).hide(settings).commit();
+            getFragment();
         }
         else Toast.makeText(Welcome.this,"Error",Toast.LENGTH_SHORT).show();
     }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Edit">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/profilePicture"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/UploadImageButtonEdit"
+        android:layout_width="wrap_content"
+        android:layout_gravity="right"
+        android:layout_height="wrap_content"
+        android:text="Upload" />
+    <EditText
+        android:id="@+id/EmailEdit"
+        android:text="Email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/FirstNameEdit"
+        android:text="First Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/LastNameEdit"
+        android:text="Last Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/PhoneEdit"
+        android:text="999999999"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/PasswordEdit"
+        android:inputType="textPassword"
+        android:text="1111111111"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/ConfirmPasswordEdit"
+        android:inputType="textPassword"
+        android:text="1111111111"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/ConfirmEdit"
+        android:text="Confirm changes"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
+</TableLayout>

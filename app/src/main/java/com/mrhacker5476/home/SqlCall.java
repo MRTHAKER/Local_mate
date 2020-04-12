@@ -18,7 +18,6 @@ import java.net.URL;
 
 public class SqlCall extends AsyncTask {
     String res;
-    Boolean result;
     public AsyncResponse delegate;
     JSONObject jsonObject;
     Object object;
@@ -36,13 +35,15 @@ public class SqlCall extends AsyncTask {
     protected Object doInBackground(Object[] objects) {
         URL url= null;
         try {
-            url = new URL("http://192.168.43.2:9090/local/"+file+".jsp?"+object.toString());
+            url = new URL("http://192.168.43.2:9090/local/" + file + ".jsp?" + object.toString());
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
             urlConnection.setDoInput(true);
         } catch (IOException e) {
             e.printStackTrace();

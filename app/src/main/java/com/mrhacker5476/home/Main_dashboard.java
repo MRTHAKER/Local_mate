@@ -76,7 +76,7 @@ public class Main_dashboard extends Fragment implements AsyncResponse{
         pd.setTitle("Processing, please wait...");
         pd.setCancelable(false);
         pd.show();
-        new SqlCall(file,lb,this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new SqlCall(file,lb,Main_dashboard.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return v;
     }
 

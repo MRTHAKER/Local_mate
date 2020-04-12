@@ -1,12 +1,26 @@
 package com.mrhacker5476.home;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Session2Command;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -14,7 +28,7 @@ import android.view.ViewGroup;
  * Use the {@link Fragment_Settings#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Fragment_Settings extends Fragment {
+public class Fragment_Settings extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -23,20 +37,12 @@ public class Fragment_Settings extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    TextView tv;
+    SharedPreferences sf;
     public Fragment_Settings() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Fragment_Settings.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Fragment_Settings newInstance(String param1, String param2) {
         Fragment_Settings fragment = new Fragment_Settings();
         Bundle args = new Bundle();
@@ -55,10 +61,29 @@ public class Fragment_Settings extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment__settings, container, false);
+        View v= inflater.inflate(R.layout.fragment__settings, container, false);
+        tv=v.findViewById(R.id.EmailSettings);
+        sf = getActivity().getSharedPreferences("log", Context.MODE_PRIVATE);
+        tv.setText(sf.getString("mail","null"));
+        tv.setOnClickListener(Fragment_Settings.this);
+        return v;
     }
+
+
+
+
+    @Override
+    public void onClick(View v) {
+        if(v==tv){
+            startActivity(new Intent(getContext(),Edit.class));
+
+        }
+
+    }
+
 }

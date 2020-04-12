@@ -30,6 +30,7 @@
         android:id="@+id/FirstNameEdit"
         android:text="First Name"
         android:layout_width="wrap_content"
+        android:inputType="none"
         android:layout_height="wrap_content"/>
     <EditText
         android:id="@+id/LastNameEdit"
@@ -39,18 +40,6 @@
     <EditText
         android:id="@+id/PhoneEdit"
         android:text="999999999"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <EditText
-        android:id="@+id/PasswordEdit"
-        android:inputType="textPassword"
-        android:text="1111111111"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <EditText
-        android:id="@+id/ConfirmPasswordEdit"
-        android:inputType="textPassword"
-        android:text="1111111111"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <Button
